@@ -1,0 +1,16 @@
+[[source]]
+url = "http://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = false
+name = "pypi"
+
+[packages]
+scrapy = "*"
+arrow = "*"
+sqlalchemy = "*"
+
+[dev-packages]
+yapf = "*"
+pylint = "*"
+
+[requires]
+python_version = "3.6"
