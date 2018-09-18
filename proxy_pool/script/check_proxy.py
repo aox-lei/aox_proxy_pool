@@ -7,10 +7,16 @@ from proxy_pool.model import Ip
 
 
 class check_proxy(object):
-    check_url = [
-        'http://www.baidu.com', 'http://www.qq.com', "https://www.taobao.com/",
-        "https://www.zhihu.com/"
-    ]
+    check_url = {
+        'http': [
+            'http://www.baidu.com', 'http://www.qq.com',
+            "http://www.ccidcom.com/"
+        ],
+        'https': [
+            "https://www.taobao.com/", "https://www.zhihu.com/",
+            "https://weibo.com/", "https://www.baidu.com"
+        ]
+    }
 
     def run(self):
         while 1:
@@ -38,19 +44,16 @@ class check_proxy(object):
 
     def check_ip(self, ip, port, http_type, score):
         if http_type == 1:
-            proxy_ip = 'http://' + ip + ':' + str(port)
+            proxies = {'http': 'http://' + ip + ':' + str(port)}
+            check_url = self.check_url['http']
         else:
-            proxy_ip = 'https://' + ip + ':' + str(port)
+            proxies = {'https': 'http://' + ip + ':' + str(port)}
+            check_url = self.check_url['https']
+
         right_time = 0
-        for _url in self.check_url:
+        for _url in check_url:
             try:
-                result = requests.get(
-                    _url,
-                    proxies={
-                        'http': proxy_ip,
-                        'https': proxy_ip
-                    },
-                    timeout=5)
+                result = requests.get(_url, proxies=proxies, timeout=5)
                 if result.status_code == 200:
                     right_time += 1
             except Exception:
@@ -67,6 +70,7 @@ class check_proxy(object):
                         'score':
                         5 if score + 1 >= 5 else score + 1
                     })
+                print('%s:%d ----- 有效' % (ip, port))
             else:
                 session.query(Ip).filter(Ip.ip == ip).filter(
                     Ip.port == port).update({
@@ -75,11 +79,11 @@ class check_proxy(object):
                         'score':
                         score - 1
                     })
+                print('%s:%d ----- 失效' % (ip, port))
 
             session.commit()
             session.close()
-        except Exception:
+        except Exception as e:
             session.rollback()
             session.close()
-
-        print('%s:%d ----- 检测完成' % (ip, port))
+            print(e)
