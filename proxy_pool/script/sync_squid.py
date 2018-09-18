@@ -23,4 +23,6 @@ def update_squid_conf(default_conf_path, conf_path):
     conf = default_conf + '\n' + proxy_conf
     with open(conf_path, 'w') as f:
         f.write(conf)
+
+    os.system('squid -k reconfig')
     print('sync success')
