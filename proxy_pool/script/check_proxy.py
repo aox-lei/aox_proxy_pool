@@ -15,7 +15,7 @@ class check_proxy(object):
     def run(self):
         while 1:
             ip_list = self.get_proxy_list()
-            pool = ThreadPoolExecutor()
+            pool = ThreadPoolExecutor(max_workers=100)
 
             threads = []
             for _info in ip_list:
@@ -28,9 +28,9 @@ class check_proxy(object):
     def get_proxy_list(self):
         session = create_session()
         try:
-            ip_list = session.query(Ip).with_entities(
-                Ip.ip, Ip.port, Ip.http_type, Ip.score).order_by(
-                    Ip.update_time).limit(100).all()
+            ip_list = session.query(Ip).filter(Ip.score > 0).with_entities(
+                Ip.ip, Ip.port, Ip.http_type,
+                Ip.score).order_by(Ip.update_time).limit(1000).all()
 
             return ip_list
         except Exception:
@@ -68,17 +68,13 @@ class check_proxy(object):
                         5 if score + 1 >= 5 else score + 1
                     })
             else:
-                if score == 1:
-                    session.query(Ip).filter(Ip.ip == ip).filter(
-                        Ip.port == port).delete()
-                else:
-                    session.query(Ip).filter(Ip.ip == ip).filter(
-                        Ip.port == port).update({
-                            'update_time':
-                            arrow.now().datetime,
-                            'score':
-                            score - 1
-                        })
+                session.query(Ip).filter(Ip.ip == ip).filter(
+                    Ip.port == port).update({
+                        'update_time':
+                        arrow.now().datetime,
+                        'score':
+                        score - 1
+                    })
 
             session.commit()
             session.close()
