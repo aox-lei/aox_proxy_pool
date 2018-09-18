@@ -13,8 +13,10 @@ class check_proxy(object):
             "http://www.ccidcom.com/"
         ],
         'https': [
-            "https://www.taobao.com/", "https://www.zhihu.com/",
-            "https://weibo.com/", "https://www.baidu.com"
+            'http://www.baidu.com', 'http://www.qq.com',
+            "http://www.ccidcom.com/", "https://www.taobao.com/",
+            "https://www.zhihu.com/", "https://weibo.com/",
+            "https://www.baidu.com"
         ]
     }
 
