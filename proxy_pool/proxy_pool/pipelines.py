@@ -25,16 +25,20 @@ class ProxyPoolPipeline(object):
             try:
                 session.add(ip_object)
                 session.commit()
+                session.close()
             except Exception as e:
                 print(e)
                 session.rollback()
+                session.close()
 
     def check(self, ip, port):
         session = create_session()
         try:
             ip_info = session.query(Ip).filter(Ip.ip == ip).filter(
                 Ip.port == port).with_entities(Ip.id).one()
+            session.close()
             if ip_info:
                 return True
         except Exception:
+            session.close()
             return False

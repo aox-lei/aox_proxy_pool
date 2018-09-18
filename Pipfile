@@ -8,6 +8,7 @@ scrapy = "*"
 arrow = "*"
 sqlalchemy = "*"
 click = "*"
+requests = "*"
 
 [dev-packages]
 yapf = "*"
