@@ -21,10 +21,10 @@ class XiciSpider(scrapy.Spider):
             item['port'] = int(_port[0])
             item['http_type'] = 1 if _http_type[0] == 'HTTP' else 2
             yield item
-        # if self.CURRENT_PAGE < 5:
-        #     self.CURRENT_PAGE += 1
-        #     yield scrapy.Request('http://www.xicidaili.com/nn/' +
-        #                          str(self.CURRENT_PAGE))
+        if self.CURRENT_PAGE < 5:
+            self.CURRENT_PAGE += 1
+            yield scrapy.Request('http://www.xicidaili.com/nn/' +
+                                 str(self.CURRENT_PAGE))
 
     def start_requests(self):
         yield scrapy.Request('http://www.xicidaili.com/nn/' +
