@@ -2,6 +2,7 @@
 import click
 from script.check_proxy import check_proxy as check_proxy_shell
 from script.sync_squid import update_squid_conf
+from script.init import init as init_shell
 
 
 @click.group()
@@ -21,7 +22,13 @@ def sync_squid_conf(default_conf_path, conf_path):
     update_squid_conf(default_conf_path, conf_path)
 
 
+@click.command()
+def init():
+    init_shell()
+
+
 cli.add_command(check_proxy)
 cli.add_command(sync_squid_conf)
+cli.add_command(init)
 if __name__ == '__main__':
     cli()
