@@ -9,6 +9,7 @@ arrow = "*"
 sqlalchemy = "*"
 click = "*"
 requests = "*"
+hot-redis = "*"
 
 [dev-packages]
 yapf = "*"

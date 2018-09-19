@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import configparser
+from hot_redis import HotClient, configure
 
-engine = create_engine('sqlite:///data/proxy.db?check_same_thread=False')
-create_session = sessionmaker(bind=engine)
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+configure(
+    host=config.get('redis', 'host'),
+    port=config.getint('redis', 'port'),
+    db=config.getint('redis', 'db'))
