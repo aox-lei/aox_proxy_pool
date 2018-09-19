@@ -18,6 +18,7 @@ class ProxyPoolPipeline(object):
                 ip=item['ip'],
                 port=item['port'],
                 http_type=item['http_type'],
+                speed=0,
                 score=5,
                 create_time=now_datetime,
                 update_time=now_datetime)

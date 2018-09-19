@@ -8,9 +8,11 @@ def update_squid_conf(default_conf_path, conf_path):
     session = create_session()
     try:
         proxy_list = session.query(Ip).filter(
-            Ip.create_time != Ip.update_time).filter(Ip.score > 0).order_by(
-                Ip.score.desc()).order_by(Ip.update_time.desc()).with_entities(
-                    Ip.id, Ip.ip, Ip.port, Ip.score).limit(100).all()
+            Ip.create_time != Ip.update_time).filter(Ip.score > 0).filter(
+                Ip.speed > 0).filter(Ip.create_time != Ip.update_time).filter(
+                    Ip.speed <= 5000).order_by(Ip.score.desc()).order_by(
+                        Ip.update_time.desc()).with_entities(
+                            Ip.id, Ip.ip, Ip.port, Ip.score).limit(100).all()
     except Exception:
         return False
     proxy_conf = ''
