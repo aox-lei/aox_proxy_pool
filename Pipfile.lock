@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2260721a783ffbe50819a029435edd6206d13968b2f303f24ca007598f92dca1"
+            "sha256": "a5538e74fe017373f5aec405e0e540dda1ce4fc9d16337f00e96b1a90f01f231"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -10,8 +10,8 @@
         "sources": [
             {
                 "name": "pypi",
-                "url": "http://mirrors.aliyun.com/pypi/simple/",
-                "verify_ssl": false
+                "url": "https://pypi.mirrors.ustc.edu.cn/simple/",
+                "verify_ssl": true
             }
         ]
     },
@@ -230,9 +230,10 @@
         },
         "pycparser": {
             "hashes": [
-                "sha256:99a8ca03e29851d96616ad0404b4aad7d9ee16f25c9f9708a11faf2810f7b226"
+                "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
             ],
-            "version": "==2.18"
+            "markers": "python_version != '3.0.*' and python_version != '3.3.*' and python_version != '3.1.*' and python_version != '3.2.*' and python_version >= '2.7'",
+            "version": "==2.19"
         },
         "pydispatcher": {
             "hashes": [
@@ -274,6 +275,7 @@
                 "sha256:8a1900a9f2a0a44ecf6e8b5eb3e967a9909dfed219ad66df094f27f7d6f330fb",
                 "sha256:a22ca993cea2962dbb588f9f30d0015ac4afcc45bee27d3978c0dbe9e97c6c0f"
             ],
+            "index": "pypi",
             "version": "==2.10.6"
         },
         "requests": {

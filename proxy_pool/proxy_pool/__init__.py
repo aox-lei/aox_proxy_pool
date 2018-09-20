@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import configparser
-
+from hot_redis import configure
 logging.basicConfig(
     level=logging.DEBUG,
     format=
@@ -9,3 +9,7 @@ logging.basicConfig(
 
 config = configparser.ConfigParser()
 config.read('config.ini')
+configure(
+    host=config.get('redis', 'host'),
+    port=config.getint('redis', 'port'),
+    db=config.getint('redis', 'db'))

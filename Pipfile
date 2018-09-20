@@ -1,6 +1,6 @@
 [[source]]
-url = "http://mirrors.aliyun.com/pypi/simple/"
-verify_ssl = false
+url = "https://pypi.mirrors.ustc.edu.cn/simple/"
+verify_ssl = true
 name = "pypi"
 
 [packages]
@@ -9,6 +9,7 @@ arrow = "*"
 sqlalchemy = "*"
 click = "*"
 requests = "*"
+redis = "*"
 hot-redis = "*"
 
 [dev-packages]
