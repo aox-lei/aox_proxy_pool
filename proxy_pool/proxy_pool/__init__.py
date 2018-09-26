@@ -11,5 +11,5 @@ logging.basicConfig(
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-engine = create_engine(config.get('mysql', 'dsn'), echo=True)
+engine = create_engine(config.get('mysql', 'dsn'), echo=False)
 Session = sessionmaker(engine)

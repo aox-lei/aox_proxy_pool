@@ -22,7 +22,7 @@ class KuaidailiSpider(scrapy.Spider):
             item['ip'] = _ip[0].strip()
             item['port'] = int(_port[0].strip())
             item['http_type'] = 1 if _http_type[0].strip() == 'HTTP' else 2
-
+            item['country'] = 'CN'
             yield item
 
         if self.CURRENT_PAGE < 5:
