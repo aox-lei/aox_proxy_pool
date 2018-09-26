@@ -5,41 +5,33 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import arrow
-from proxy_pool import create_session
+from proxy_pool import Session
+from proxy_pool.models import Ip
 from sqlalchemy.orm.exc import NoResultFound
-from proxy_pool.model import Ip
 
 
 class ProxyPoolPipeline(object):
     def process_item(self, item, spider):
         if not self.check(item['ip'], item['port']):
-            now_datetime = arrow.now().datetime
-            ip_object = Ip(
-                ip=item['ip'],
-                port=item['port'],
-                http_type=item['http_type'],
-                speed=0,
-                score=5,
-                create_time=now_datetime,
-                update_time=now_datetime)
-            session = create_session()
+            session = Session()
             try:
-                session.add(ip_object)
+                session.add(
+                    Ip(ip=item['ip'],
+                       port=item['port'],
+                       http_type=item['http_type'],
+                       country=item['country'],
+                       create_time=arrow.now().datetime,
+                       update_time=arrow.now().datetime))
                 session.commit()
-                session.close()
             except Exception as e:
-                print(e)
                 session.rollback()
-                session.close()
 
     def check(self, ip, port):
-        session = create_session()
+        session = Session()
         try:
-            ip_info = session.query(Ip).filter(Ip.ip == ip).filter(
-                Ip.port == port).with_entities(Ip.id).one()
-            session.close()
-            if ip_info:
-                return True
-        except Exception:
-            session.close()
+            info = session.query(Ip).filter(Ip.ip == ip).filter(
+                Ip.port==port).with_entities(Ip.id).one()
+        except NoResultFound as e:
             return False
+
+        return True

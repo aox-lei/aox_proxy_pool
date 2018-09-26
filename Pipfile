@@ -6,11 +6,10 @@ name = "pypi"
 [packages]
 scrapy = "*"
 arrow = "*"
-sqlalchemy = "*"
 click = "*"
 requests = "*"
-redis = "*"
-hot-redis = "*"
+sqlalchemy = "*"
+pymysql = "*"
 
 [dev-packages]
 yapf = "*"

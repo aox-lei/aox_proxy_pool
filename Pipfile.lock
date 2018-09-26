@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a5538e74fe017373f5aec405e0e540dda1ce4fc9d16337f00e96b1a90f01f231"
+            "sha256": "68e9b7eef00ece585b9f7a009c6acaa64b82f997fc2a337f0a4e92b853d84376"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -142,14 +142,6 @@
             "markers": "python_version != '3.0.*' and python_version != '3.2.*' and python_version != '3.1.*' and python_version != '3.3.*' and python_version >= '2.7'",
             "version": "==1.0.3"
         },
-        "hot-redis": {
-            "hashes": [
-                "sha256:15472a0f243035996a254b410d76605367b676282c7292856cb842caf4e81dfc",
-                "sha256:b22cb778f8db0ea95f001ba5935635136be3f86f298d4830d5c5a9e785929ed8"
-            ],
-            "index": "pypi",
-            "version": "==0.3"
-        },
         "hyperlink": {
             "hashes": [
                 "sha256:98da4218a56b448c7ec7d2655cb339af1f7d751cf541469bb4fc28c4a4245b34",
@@ -249,6 +241,14 @@
             ],
             "version": "==1.9.0"
         },
+        "pymysql": {
+            "hashes": [
+                "sha256:95f057328357e0e13a30e67857a8c694878b0175797a9a203ee7adbfb9b1ec5f",
+                "sha256:9ec760cbb251c158c19d6c88c17ca00a8632bac713890e465b2be01fdc30713f"
+            ],
+            "index": "pypi",
+            "version": "==0.9.2"
+        },
         "pyopenssl": {
             "hashes": [
                 "sha256:26ff56a6b5ecaf3a2a59f132681e2a80afcc76b4f902f612f518f92c2a1bf854",
@@ -269,14 +269,6 @@
                 "sha256:ff43b5b74b9266f8df4232a8f768dc4d67281a271905e2ed4a3689d4d304cd02"
             ],
             "version": "==1.5.0"
-        },
-        "redis": {
-            "hashes": [
-                "sha256:8a1900a9f2a0a44ecf6e8b5eb3e967a9909dfed219ad66df094f27f7d6f330fb",
-                "sha256:a22ca993cea2962dbb588f9f30d0015ac4afcc45bee27d3978c0dbe9e97c6c0f"
-            ],
-            "index": "pypi",
-            "version": "==2.10.6"
         },
         "requests": {
             "hashes": [
@@ -308,19 +300,12 @@
             ],
             "version": "==1.11.0"
         },
-        "sphinx-me": {
-            "hashes": [
-                "sha256:2c67a6bbf9d60631a84b687f0bafbfe2cb16e2663deee28ce03d5f07c7d89807",
-                "sha256:98bef823a4053ca1ccbbe2322bd855a3c5e98797c50bcfeeb630fe11c47d5f1a"
-            ],
-            "version": "==0.3"
-        },
         "sqlalchemy": {
             "hashes": [
-                "sha256:ef6569ad403520ee13e180e1bfd6ed71a0254192a934ec1dbd3dbf48f4aa9524"
+                "sha256:c5951d9ef1d5404ed04bae5a16b60a0779087378928f997a294d1229c6ca4d3e"
             ],
             "index": "pypi",
-            "version": "==1.2.11"
+            "version": "==1.2.12"
         },
         "twisted": {
             "hashes": [

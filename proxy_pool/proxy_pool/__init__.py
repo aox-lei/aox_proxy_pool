@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import configparser
-from hot_redis import configure
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 logging.basicConfig(
     level=logging.DEBUG,
     format=
@@ -9,7 +10,6 @@ logging.basicConfig(
 
 config = configparser.ConfigParser()
 config.read('config.ini')
-configure(
-    host=config.get('redis', 'host'),
-    port=config.getint('redis', 'port'),
-    db=config.getint('redis', 'db'))
+
+engine = create_engine(config.get('mysql', 'dsn'), echo=True)
+Session = sessionmaker(engine)

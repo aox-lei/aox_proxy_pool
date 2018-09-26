@@ -9,9 +9,8 @@ import scrapy
 
 
 class ProxyPoolItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
     ip = scrapy.Field()
     port = scrapy.Field()
     city = scrapy.Field()
     http_type = scrapy.Field()
+    country = scrapy.Field()
