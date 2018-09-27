@@ -33,34 +33,34 @@ class check_proxy(object):
     }
 
     check_ports = {
-        80: 5,
-        8080: 1,
-        3128: 1,
-        8081: 1,
-        9080: 1,
-        1080: 1,
-        21: 3,
-        23: 2,
-        53: 3,
-        1863: 2,
-        2289: 1,
-        443: 5,
-        69: 1,
-        22: 5,
-        25: 2,
-        110: 2,
-        7001: 1,
-        9090: 1,
-        3389: 5,
-        1521: 5,
-        1158: 3,
-        2100: 1,
-        1433: 2,
-        3306: 5,
-        5631: 1,
-        5632: 1,
-        5000: 2,
-        8888: 2
+        80: 500,
+        8080: 100,
+        3128: 100,
+        8081: 100,
+        9080: 100,
+        1080: 100,
+        21: 300,
+        23: 200,
+        53: 300,
+        1863: 200,
+        2289: 100,
+        443: 500,
+        69: 100,
+        22: 500,
+        25: 200,
+        110: 200,
+        7001: 100,
+        9090: 100,
+        3389: 500,
+        1521: 500,
+        1158: 300,
+        2100: 100,
+        1433: 200,
+        3306: 500,
+        5631: 100,
+        5632: 100,
+        5000: 200,
+        8888: 200
     }
 
     def run(self):
@@ -161,15 +161,20 @@ class check_proxy(object):
         for _url in check_urls:
             _start_time = time.time()
             try:
-                result = requests.get(_url, timeout=5)
-
+                result = requests.get(
+                    _url,
+                    timeout=5,
+                    proxies={
+                        'http': 'http://%s:%d' % (ip, port),
+                        'https': 'http://%s:%d' % (ip, port)
+                    })
                 if self.check_html_title(result.text,
                                          self.check_urls_str.get(_url)):
                     total_speed_time += int((time.time() - _start_time) * 1000)
                     visit_success_count += 1
             except Exception:
                 pass
-        
+
         if total_speed_time == 0 or visit_success_count == 0:
             return False
         else:
@@ -200,7 +205,7 @@ class check_proxy(object):
         return ok_ports
 
     def calculate_weight(self, score, speed_time, open_ports):
-        _weight = score
+        _weight = score*1000
         for _port in open_ports:
             if _port in self.check_ports:
                 _weight += self.check_ports.get(_port)
