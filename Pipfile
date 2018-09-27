@@ -10,6 +10,7 @@ click = "*"
 requests = "*"
 sqlalchemy = "*"
 pymysql = "*"
+ipython = "*"
 
 [dev-packages]
 yapf = "*"

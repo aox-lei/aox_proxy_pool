@@ -10,7 +10,7 @@
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'proxy_pool'
-
+LOG_LEVEL = 'INFO'
 SPIDER_MODULES = ['proxy_pool.spiders']
 NEWSPIDER_MODULE = 'proxy_pool.spiders'
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
