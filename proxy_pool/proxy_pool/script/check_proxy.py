@@ -18,7 +18,6 @@ class check_proxy(object):
         'http://www.ccidcom.com/': '通信',
         'https://www.taobao.com/': '淘宝',
         'https://www.zhihu.com/': '知乎',
-        'https://weibo.com/': '微博',
         'https://www.baidu.com': '百度',
     }
     check_urls = {
@@ -28,7 +27,7 @@ class check_proxy(object):
         ],
         'https': [
             'https://www.taobao.com/', 'https://www.zhihu.com/',
-            'https://weibo.com/', 'https://www.baidu.com'
+            'https://www.baidu.com'
         ]
     }
 
@@ -159,6 +158,7 @@ class check_proxy(object):
         total_speed_time = 0
         visit_success_count = 0
         for _url in check_urls:
+            
             _start_time = time.time()
             try:
                 result = requests.get(
@@ -168,6 +168,7 @@ class check_proxy(object):
                         'http': 'http://%s:%d' % (ip, port),
                         'https': 'http://%s:%d' % (ip, port)
                     })
+
                 if self.check_html_title(result.text,
                                          self.check_urls_str.get(_url)):
                     total_speed_time += int((time.time() - _start_time) * 1000)
