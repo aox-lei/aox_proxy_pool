@@ -5,6 +5,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import arrow
+import logging
 from proxy_pool import Session
 from proxy_pool.models import Ip
 from sqlalchemy.orm.exc import NoResultFound
@@ -24,7 +25,11 @@ class ProxyPoolPipeline(object):
                        update_time=arrow.now().datetime))
                 session.commit()
             except Exception as e:
+                logging.exception(e)
                 session.rollback()
+            finally:
+                session.close()
+                
 
     def check(self, ip, port):
         session = Session()

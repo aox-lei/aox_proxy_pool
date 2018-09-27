@@ -103,7 +103,7 @@ class check_proxy(object):
             except Exception as e:
                 logging.exception(e)
                 session.rollback()
-            logging.warning('%s:%d ---- 端口未开放' % (ip, port))
+            logging.warning('%s:%d ---- 端口未开放' % (ip, int(port)))
             return False
 
         speed_time = self.check_visit(ip, port, http_type)
@@ -114,7 +114,7 @@ class check_proxy(object):
                         'score':
                         score - 1 if score - 1 >= 0 else 0,
                         'open_port':
-                        ','.join(open_ports),
+                        ','.join(map(lambda x:str(x), open_ports)),
                         'update_time':
                         arrow.now().datetime
                     })
@@ -123,7 +123,7 @@ class check_proxy(object):
                 logging.exception(e)
                 session.rollback()
 
-            logging.warning('%s:%d ------ 无法访问' % (ip, port))
+            logging.warning('%s:%d ------ 无法访问' % (ip, int(port)))
         else:
             try:
                 score = score + 1 if score + 1 <= 5 else 5
@@ -136,7 +136,7 @@ class check_proxy(object):
                         'weight':
                         self.calculate_weight(score, speed_time, open_ports),
                         'open_port':
-                        ','.join(open_ports),
+                        ','.join(map(lambda x:str(x), open_ports)),
                         'update_time':
                         arrow.now().datetime,
                     })
@@ -182,12 +182,14 @@ class check_proxy(object):
             return False
 
     def check_port(self, ip, port):
-        check_ports = self.check_ports.keys()
-        check_ports = check_ports.append(port)
+        check_ports = list(self.check_ports.keys())
+        check_ports.append(port)
+        check_ports = list(set(check_ports))
+
         ok_ports = []
         for _port in check_ports:
-            if utils.check_port(ip, port):
-                ok_ports.append(port)
+            if utils.check_port(ip, _port):
+                ok_ports.append(_port)
 
         if port not in ok_ports:
             return False
