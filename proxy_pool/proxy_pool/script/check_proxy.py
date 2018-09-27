@@ -114,7 +114,7 @@ class check_proxy(object):
                         'score':
                         score - 1 if score - 1 >= 0 else 0,
                         'open_port':
-                        ','.join(map(lambda x:str(x), open_ports)),
+                        ','.join(map(lambda x: str(x), open_ports)),
                         'update_time':
                         arrow.now().datetime
                     })
@@ -136,7 +136,7 @@ class check_proxy(object):
                         'weight':
                         self.calculate_weight(score, speed_time, open_ports),
                         'open_port':
-                        ','.join(map(lambda x:str(x), open_ports)),
+                        ','.join(map(lambda x: str(x), open_ports)),
                         'update_time':
                         arrow.now().datetime,
                     })
@@ -162,17 +162,21 @@ class check_proxy(object):
             _start_time = time.time()
             try:
                 result = requests.get(_url, timeout=5)
-                if self.check_html_title(result.html,
-                                         self.check_urls_str.get(_url)):
-                    total_speed_time = int((time.time() - _start_time) * 1000)
-                    visit_success_count += 1
-            except Exception as e:
-                pass
 
+                if self.check_html_title(result.text,
+                                         self.check_urls_str.get(_url)):
+                    total_speed_time += int((time.time() - _start_time) * 1000)
+                    visit_success_count += 1
+            except Exception:
+                pass
+        
         if total_speed_time == 0 or visit_success_count == 0:
             return False
         else:
-            return int(total_speed_time / visit_success_count)
+            total_speed_time += (len(check_urls) - visit_success_count) * 5000
+            visit_success_count = len(check_urls)
+
+        return int(total_speed_time / visit_success_count)
 
     def check_html_title(self, html, check_str):
         title = re.findall('<title>(.*?)<\/title>', html)
@@ -196,7 +200,7 @@ class check_proxy(object):
         return ok_ports
 
     def calculate_weight(self, score, speed_time, open_ports):
-        _weight += score
+        _weight = score
         for _port in open_ports:
             if _port in self.check_ports:
                 _weight += self.check_ports.get(_port)
