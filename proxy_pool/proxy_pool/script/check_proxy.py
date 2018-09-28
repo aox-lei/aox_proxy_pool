@@ -6,6 +6,7 @@ import logging
 import re
 import logging
 from concurrent.futures import ThreadPoolExecutor
+from requests.exceptions import ConnectionError
 from proxy_pool import Session
 from proxy_pool.models import Ip
 from proxy_pool import utils
@@ -72,8 +73,14 @@ class check_proxy(object):
             threads = []
             for _info in ip_list:
                 threads.append(
-                    pool.submit(self.check_ip, _info.ip, _info.port,
-                                _info.http_type, _info.score))
+                    pool.submit(
+                        self.check_ip,
+                        _info.ip,
+                        _info.port,
+                        _info.http_type,
+                        _info.score,
+                        is_new=1
+                        if _info.create_time == _info.update_time else 0))
 
             pool.shutdown()
 
@@ -82,13 +89,14 @@ class check_proxy(object):
         try:
             lists = session.query(Ip).filter(Ip.score > 0).order_by(
                 Ip.update_time.desc()).with_entities(
-                    Ip.id, Ip.ip, Ip.port, Ip.http_type, Ip.score).all()
+                    Ip.id, Ip.ip, Ip.port, Ip.http_type, Ip.score,
+                    Ip.create_time, Ip.update_time).all()
             return lists
         except Exception as e:
             logging.exception(e)
             return False
 
-    def check_ip(self, ip, port, http_type, score):
+    def check_ip(self, ip, port, http_type, score, is_new=1):
         open_ports = self.check_port(ip, port)
         session = Session()
         if open_ports is False:
@@ -105,47 +113,68 @@ class check_proxy(object):
             logging.warning('%s:%d ---- 端口未开放' % (ip, int(port)))
             return False
 
+        _update_data = {
+            'open_port': ','.join(map(lambda x: str(x), open_ports)),
+            'update_time': arrow.now().datetime
+        }
+        if is_new == 1:
+            new_http_type = self.check_http_type(ip, port)
+            _update_data['http_type'] = 1 if new_http_type == 'http' else 2
+
         speed_time = self.check_visit(ip, port, http_type)
+
         if speed_time is False:
-            try:
-                session.query(Ip).filter(Ip.ip == ip).filter(
-                    Ip.port == port).update({
-                        'score':
-                        score - 1 if score - 1 >= 0 else 0,
-                        'open_port':
-                        ','.join(map(lambda x: str(x), open_ports)),
-                        'update_time':
-                        arrow.now().datetime
-                    })
-                session.commit()
-            except Exception as e:
-                logging.exception(e)
-                session.rollback()
+            _update_data['score'] = score - 1 if score - 1 >= 0 else 0
 
             logging.warning('%s:%d ------ 无法访问' % (ip, int(port)))
         else:
-            try:
-                score = score + 1 if score + 1 <= 5 else 5
-                session.query(Ip).filter(Ip.ip == ip).filter(
-                    Ip.port == port).update({
-                        'score':
-                        score,
-                        'speed':
-                        speed_time,
-                        'weight':
-                        self.calculate_weight(score, speed_time, open_ports),
-                        'open_port':
-                        ','.join(map(lambda x: str(x), open_ports)),
-                        'update_time':
-                        arrow.now().datetime,
-                    })
-                session.commit()
-            except Exception as e:
-                logging.exception(e)
-                session.rollback()
+            _update_data['score'] = score + 1 if score + 1 <= 5 else 5
+            _update_data['speed'] = speed_time
+            _update_data['weight'] = self.calculate_weight(
+                score, speed_time, open_ports)
 
             logging.info('%s:%d ------ 代理有效, speed:%d, open_ports:%s' %
-                         (ip, port, speed_time, ','.join(open_ports)))
+                         (ip, port, speed_time, _update_data['open_port']))
+
+        try:
+            session.query(Ip).filter(Ip.ip == ip).filter(
+                Ip.port == port).update(_update_data)
+            session.commit()
+        except Exception as e:
+            logging.exception(e)
+            session.rollback()
+
+    def check_http_type(self, ip, port):
+        check_urls = self.check_urls['http'] + self.check_urls['https']
+        success_visit_count = {
+            'http': len(self.check_urls['http']),
+            'https': len(self.check_urls['https'])
+        }
+        for _url in check_urls:
+            try:
+                requests.get(
+                    _url,
+                    timeout=5,
+                    proxies={
+                        'http': 'http://%s:%d' % (ip, port),
+                        'https': 'http://%s:%d' % (ip, port)
+                    })
+            except ConnectionError:
+                if _url[0:5] == 'https':
+                    success_visit_count['https'] -= 1
+                elif _url[0:4] == 'http':
+                    success_visit_count['http'] -= 1
+            except Exception:
+                pass
+
+        if success_visit_count['http'] > 0 and success_visit_count[
+                'https'] == 0:
+            return 'http'
+        elif success_visit_count['https'] > 0 and success_visit_count[
+                'http'] == 0:
+            return 'https'
+        else:
+            return False
 
     def check_visit(self, ip, port, http_type):
         if http_type == 1:
@@ -157,8 +186,8 @@ class check_proxy(object):
 
         total_speed_time = 0
         visit_success_count = 0
+
         for _url in check_urls:
-            
             _start_time = time.time()
             try:
                 result = requests.get(
@@ -206,7 +235,7 @@ class check_proxy(object):
         return ok_ports
 
     def calculate_weight(self, score, speed_time, open_ports):
-        _weight = score*1000
+        _weight = score * 1000
         for _port in open_ports:
             if _port in self.check_ports:
                 _weight += self.check_ports.get(_port)
