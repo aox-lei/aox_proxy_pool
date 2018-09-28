@@ -119,7 +119,8 @@ class check_proxy(object):
         }
         if is_new == 1:
             new_http_type = self.check_http_type(ip, port)
-            _update_data['http_type'] = 1 if new_http_type == 'http' else 2
+            if (new_http_type):
+                _update_data['http_type'] = new_http_type
 
         speed_time = self.check_visit(ip, port, http_type)
 
@@ -169,10 +170,12 @@ class check_proxy(object):
 
         if success_visit_count['http'] > 0 and success_visit_count[
                 'https'] == 0:
-            return 'http'
+            return 1
         elif success_visit_count['https'] > 0 and success_visit_count[
                 'http'] == 0:
-            return 'https'
+            return 2
+        elif success_visit_count['https'] > 0 and success_visit_count['http'] > 0:
+            return 3
         else:
             return False
 
