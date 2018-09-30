@@ -136,14 +136,14 @@ class check_proxy(object):
 
             logging.info('%s:%d ------ 代理有效, speed:%d, open_ports:%s' %
                          (ip, port, speed_time, _update_data['open_port']))
-
-        try:
-            session.query(Ip).filter(Ip.ip == ip).filter(
-                Ip.port == port).update(_update_data)
-            session.commit()
-        except Exception as e:
-            logging.exception(e)
-            session.rollback()
+        if utils.check_network():
+            try:
+                session.query(Ip).filter(Ip.ip == ip).filter(
+                    Ip.port == port).update(_update_data)
+                session.commit()
+            except Exception as e:
+                logging.exception(e)
+                session.rollback()
 
     def check_http_type(self, ip, port):
         check_urls = self.check_urls['http'] + self.check_urls['https']
