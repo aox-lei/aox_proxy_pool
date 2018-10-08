@@ -6,6 +6,8 @@
 3. 通过脚本自动更新squid配置文件, 这样使用的客户端只需要指定squid服务器的地址即可。
 4. 自动网络监测, 断网等情况下不会进行ip监测, 防止意外数据出错。
 
+![avatar](https://raw.githubusercontent.com/aox-lei/aox_proxy_pool/master/readme/1.png)
+
 ## 功能特色
 
 1. 可自行增加代理抓取渠道
