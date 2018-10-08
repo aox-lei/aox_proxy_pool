@@ -35,7 +35,24 @@ git clone "https://github.com/aox-lei/aox_proxy_pool"
 ```
 > cp proxy_pool/config.ini.default proxy_pool/config.ini
 ```
-5. 修改配置信息
+5. 修改配置信息和创建数据表
+```sql
+CREATE TABLE `ip` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` char(15) NOT NULL DEFAULT '',
+  `port` int(6) NOT NULL DEFAULT '0',
+  `score` tinyint(5) NOT NULL DEFAULT '5' COMMENT '得分, 默认5分, 抓取成功一次, 分数+1, 失败一次-1, 到0则不抓取',
+  `weight` int(3) NOT NULL DEFAULT '0' COMMENT '权重',
+  `speed` int(11) NOT NULL DEFAULT '0' COMMENT '平均速度',
+  `http_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '支持的http类型: 1:http 2:https 3:all',
+  `country` char(5) NOT NULL DEFAULT '' COMMENT '所属国家',
+  `open_port` varchar(255) NOT NULL DEFAULT '' COMMENT '开放端口， 逗号分隔',
+  `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_ip_port` (`ip`,`port`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4538 DEFAULT CHARSET=utf8
+```
 6. 运行抓取项目
 ```
 > scrapy crawl xici
