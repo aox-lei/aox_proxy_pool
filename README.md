@@ -65,6 +65,17 @@ CREATE TABLE `ip` (
 > python manager.py check_proxy
 ```
 8. 运行squid同步
+```
+> python manager.py sync_squid -d 默认配置文件地址 -c squid的配置文件地址
+```
+
+## squid同步配置文件说明
+1. 安装完squid后修改配置文件, 之后复制一份squid.conf为squid.conf.default
+2. 执行squid同步的命令, python会读取有效的代理ip和squid.conf.default, 拼合成新的配置文件squid.conf。
+
+## 运行效果检测
+1. 抓取了4537个免费代理ip, 但是在运行一段时间检测后, 长期比较稳定的基本只有60多个, 所以如果需要大量的代理ip, 那么必须得增加抓取量
+2. 代理ip的速度以及稳定性还是比较不错的, 偶尔会发生无法访问的情况, 但是总体来说, 还是比较ok的, 可以在生产环境中使用。
 
 ## 目前支持的抓取网站
 1. 西祠代理

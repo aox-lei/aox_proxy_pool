@@ -15,8 +15,8 @@ def check_ip():
 
 
 @click.command()
-@click.option('--default-conf-path', '-d', help='默认的squid的配置文件地址')
-@click.option('--conf-path', '-c', help='配置文件地址')
+@click.option('--default-conf-path', '-d', required=True, help='默认的squid的配置文件地址')
+@click.option('--conf-path', '-c', required=True, help='配置文件地址')
 def sync_squid(default_conf_path, conf_path):
     update_squid_conf(default_conf_path, conf_path)
 
