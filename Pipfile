@@ -8,7 +8,7 @@ scrapy = "*"
 arrow = "*"
 click = "*"
 requests = ">=2.20.0"
-sqlalchemy = "*"
+sqlalchemy = ">=1.3.0"
 pymysql = "*"
 ipython = "*"
 
