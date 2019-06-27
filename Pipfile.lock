@@ -413,7 +413,7 @@
                 "sha256:5de7b79b26aee64efe63319bb8f037af88c21287d1502b39706c818065b3d5a4",
                 "sha256:95ae985716e8107816d8d0df249d558dbaabb677987cc2ace45272c166b267e4"
             ],
-            "version": "==18.7.0"
+            "version": ">=19.2.1"
         },
         "urllib3": {
             "hashes": [
@@ -421,7 +421,7 @@
                 "sha256:b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"
             ],
             "markers": "python_version < '4' and python_version != '3.0.*' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.1.*' and python_version >= '2.6'",
-            "version": "==1.23"
+            "version": ">=1.24.2"
         },
         "w3lib": {
             "hashes": [
